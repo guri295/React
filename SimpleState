@@ -1,0 +1,125 @@
+import { useState } from 'react'
+
+function disableButton() {
+  const [disabled, setDisabled] = useState(false);
+  return (
+    <div>
+      <button 
+      disabled = {disabled}
+      onClick={()=>setDisabled(true)}>Click me</button>
+    </div>
+  )
+}
+
+export default disableButton
+
+function Counter(){
+  const [count, setCount] = useState(0);
+  const increment = () => {
+    if(count < 10){
+      setCount(count + 1);
+    }
+  }
+  const decrement = () => {
+    if(count > 0){
+      setCount(count - 1);
+    }
+  }
+  const rst = () =>{
+    if(count > 0){
+      setCount(0);
+    }
+  }
+  return(
+    <div>
+      <h3>Counter :{count}</h3>
+      <button onClick={increment}>+</button><br></br>
+      <button onClick={decrement}>-</button><br></br>
+      <button onClick={rst}>reset</button>
+    </div>
+  );
+}
+export default Counter;
+
+
+function App() {
+  const [tech, setTech] = useState("CSS");
+  return (
+    <div>
+      <select
+      value={tech}
+      onChange={(e)=>setTech(e.target.value)}>
+        <option>HTML</option>
+        <option>CSS</option>
+        <option>JAVASCRIPT</option>
+        <option>REACT</option>
+      </select>
+      <p>Your selected: {tech}</p>
+    </div>
+  )
+}
+
+export default App
+
+
+function PasswordField() {
+  const [show, setShow] = useState(false);
+  return (
+    <div>
+      <h1>Password Field</h1>
+      <input 
+      type={show ? "text" : "password"}
+      placeholder="Enter the password"/>
+      <br></br>
+      <button onClick={()=>setShow(!show)}>
+        {show ? "Hide" : "Show"}
+      </button>
+    </div>
+  )
+}
+
+export default PasswordField
+
+function App(){
+  const [text, setText] = useState("");
+  return(
+    <div>
+      <h1>Live Input Preview</h1>
+      <input
+      type="text"
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      />
+      <h2>You typed: {text}</h2>
+    </div>
+  );
+}
+export default App;
+
+function App() {
+  // Quotes array
+  const quotes = [
+    "Dream big and dare to fail.",
+    "Stay positive, work hard, make it happen.",
+    "Success is not final, failure is not fatal.",
+    "Believe in yourself.",
+    "Never give up."
+  ];
+  const [quote, setQuote] = useState(quotes[0]);
+  const generateQuote = () => {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    setQuote(quotes[randomIndex]);
+  };
+
+  return (
+    <div>
+      <h1>Random Quote Generator</h1>
+      <p>{quote}</p>
+      <button onClick={generateQuote}>
+        Generate Quote
+      </button>
+    </div>
+  );
+}
+
+export default App;
