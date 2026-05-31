@@ -391,3 +391,33 @@ function ProductTable({ products }) {
   );
 }
 export default ProductTable;
+----------------------------------------------
+enum DeviceStatus {
+  On = "On",
+  Off = "Off",
+  Standby = "Standby"
+}
+type SmartDevice = [string, string, DeviceStatus];
+function toggleDeviceStatus(
+  device: SmartDevice,
+  newStatus: DeviceStatus
+): SmartDevice {
+  if (device[2] === DeviceStatus.Off &&
+      newStatus === DeviceStatus.Standby) {
+    console.log("Invalid Transition!");
+    return device;
+  }
+  device[2] = newStatus;
+  return device;
+}
+let myDevice: SmartDevice = [
+  "Living Room Light",
+  "Light",
+  DeviceStatus.Off
+];
+console.log("Before:", myDevice);
+let updatedDevice = toggleDeviceStatus(
+  myDevice,
+  DeviceStatus.On
+);
+console.log("After:", updatedDevice);
