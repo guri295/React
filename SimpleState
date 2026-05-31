@@ -1,17 +1,3 @@
-import { useState } from 'react'
-
-function disableButton() {
-  const [disabled, setDisabled] = useState(false);
-  return (
-    <div>
-      <button 
-      disabled = {disabled}
-      onClick={()=>setDisabled(true)}>Click me</button>
-    </div>
-  )
-}
-export default disableButton
-------------------------------
 function Counter(){
   const [count, setCount] = useState(0);
   const increment = () => {
@@ -40,25 +26,7 @@ function Counter(){
 }
 export default Counter;
 -------------------------
-function App() {
-  const [tech, setTech] = useState("CSS");
-  return (
-    <div>
-      <select
-      value={tech}
-      onChange={(e)=>setTech(e.target.value)}>
-        <option>HTML</option>
-        <option>CSS</option>
-        <option>JAVASCRIPT</option>
-        <option>REACT</option>
-      </select>
-      <p>Your selected: {tech}</p>
-    </div>
-  )
-}
 
-export default App
-------------------------------
 function PasswordField() {
   const [show, setShow] = useState(false);
   return (
@@ -74,7 +42,6 @@ function PasswordField() {
     </div>
   )
 }
-
 export default PasswordField
 -----------------------
 function App(){
@@ -88,32 +55,6 @@ function App(){
       onChange={(e) => setText(e.target.value)}
       />
       <h2>You typed: {text}</h2>
-    </div>
-  );
-}
-export default App;
------------------
-function App() {
-  // Quotes array
-  const quotes = [
-    "Dream big and dare to fail.",
-    "Stay positive, work hard, make it happen.",
-    "Success is not final, failure is not fatal.",
-    "Believe in yourself.",
-    "Never give up."
-  ];
-  const [quote, setQuote] = useState(quotes[0]);
-  const generateQuote = () => {
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    setQuote(quotes[randomIndex]);
-  };
-  return (
-    <div>
-      <h1>Random Quote Generator</h1>
-      <p>{quote}</p>
-      <button onClick={generateQuote}>
-        Generate Quote
-      </button>
     </div>
   );
 }
@@ -238,4 +179,215 @@ function App() {
   );
 }
 export default App;
+---------------------------------------------------------
+import React, { useState, useEffect } from "react";
+function SectionB2() {
+  const [response, setResponse] = useState([]);
+  const [filter, setFilter] = useState("greater than 9")
 
+  let filteredArray = response.filter((movie)=>{
+    if(filter == "greater than 9" && movie.rating >= 9){
+        return true
+    }else if(filter == "less than 9" && movie.rating < 9){
+        return true
+    }
+  })
+  useEffect(() => {
+    fetch("https://feecq.github.io/api/movies.json")
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setResponse(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  console.log("rendered")
+  return (
+    <>
+        Rating: 
+        <select onChange={(event)=> setFilter(event.target.value)}>
+            <option value="greater than 9">9 or more</option>
+            <option value="less than 9">less than 9</option>
+        </select>
+          
+        <div style={{
+            display: "flex",
+            height: "100dvh",
+            justifyContent: "center",
+            flexWrap: "wrap"
+        }}>
+            {filteredArray.map((movie)=>{
+                return(
+                    <div style={{
+                        height: "300px",
+                        width: "250px",
+                        border: "1px solid black",
+                        margin: "10px",
+                        textAlign: "center",
+                        paddingTop: "5px"
+                    }}>
+                        <img 
+                            style={{
+                            height: "200px",
+                            width: "240px",  
+                            }}
+                            src={movie.image}
+                        /> 
+                        <h5>{movie.movie}</h5>
+                        <h6>Rating: {movie.rating}</h6>
+                    </div>
+                )
+            })}
+        </div>
+    </>
+);
+}
+export default SectionB2;
+-------------------------------
+enum BookStatus {
+  Available,
+  CheckedOut,
+  Reserved
+}
+type Book = [string, string, number, BookStatus];
+
+function borrowBook(book: Book): string {
+
+  if (book[3] === BookStatus.Available) {
+
+    book[3] = BookStatus.CheckedOut;
+
+    return `"${book[0]}" has been borrowed successfully.`;
+  }
+
+  else if (book[3] === BookStatus.Reserved) {
+    return `"${book[0]}" is reserved and cannot be borrowed.`;
+  }
+
+  else {
+    return `"${book[0]}" is already checked out.`;
+  }
+}
+let book1: Book = [
+  "Harry Potter",
+  "J.K. Rowling",
+  101,
+  BookStatus.Available
+];
+console.log(borrowBook(book1));
+console.log(book1);
+-------------------------------------
+enum SeatType{
+  Regular,
+  Premium,
+  VIP
+}
+type Ticket = [string, number, SeatType, number];
+function calculateDiscount(ticket: Ticket): number{
+  let price = ticket[3];
+  let seatType = ticket[2];
+  if(seatType == SeatType.Premium){
+    price = price - (price * 10/100);
+  }
+  else if(seatType == SeatType.VIP){
+    price = price - (price * 20/100);
+  }
+  return price;
+}
+let ticket1: Ticket = ["Avengers", 12, SeatType.Premium, 500];
+let finalPrice = calculateDiscount(ticket1);
+console.log("Final Ticket Price:", finalPrice);
+-----------------------------------------------------
+//React - E-commerce Product Dashboard
+import React, { useEffect, useState } from "react";
+import ProductTable from "./ProductTable";
+function App() {
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch(() => {
+        setError("Failed to load products.");
+      });
+  }, []);
+
+  const handleSort = (e) => {
+    const value = e.target.value;
+    setSortOrder(value);
+
+    let sortedProducts = [...products];
+
+    if (value === "lowToHigh") {
+      sortedProducts.sort((a, b) => a.price - b.price);
+    } else if (value === "highToLow") {
+      sortedProducts.sort((a, b) => b.price - a.price);
+    }
+
+    setProducts(sortedProducts);
+  };
+
+  if (error) {
+    return <h2>{error}</h2>;
+  }
+  return (
+    <div>
+      <h2 style={{ textAlign: "center" }}>Product Dashboard</h2>
+
+      <div style={{ textAlign: "center", marginBottom: "15px" }}>
+        <select value={sortOrder} onChange={handleSort}>
+          <option value="">Select Sorting</option>
+          <option value="lowToHigh">Price Low to High</option>
+          <option value="highToLow">Price High to Low</option>
+        </select>
+      </div>
+
+      <ProductTable products={products} />
+    </div>
+  );
+}
+export default App;
+import React from "react";
+function ProductTable({ products }) {
+  return (
+    <table border="1" cellPadding="10" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Rating</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {products.map((product) => (
+          <tr key={product.id}>
+            <td>{product.id}</td>
+            <td>{product.title}</td>
+            <td>${product.price}</td>
+            <td>{product.category}</td>
+            <td>{product.rating.rate}</td>
+            <td>
+              <img
+                src={product.image}
+                alt={product.title}
+                width="50"
+                height="50"
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+export default ProductTable;
