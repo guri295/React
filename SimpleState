@@ -421,3 +421,83 @@ let updatedDevice = toggleDeviceStatus(
   DeviceStatus.On
 );
 console.log("After:", updatedDevice);
+---------------------------------------------------------
+import React, { useState } from "react";
+
+function ProductTiles() {
+
+  const products = [
+    { id: 1, name: "Laptop", price: 80000, category: "Premium" },
+    { id: 2, name: "Mouse", price: 500, category: "Basic" },
+    { id: 3, name: "Keyboard", price: 1500, category: "Basic" },
+    { id: 4, name: "Smartphone", price: 60000, category: "Premium" },
+    { id: 5, name: "Monitor", price: 12000, category: "Deluxe" },
+    { id: 6, name: "Headphones", price: 3000, category: "Deluxe" }
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  function handleCategoryChange(event) {
+    setSelectedCategory(event.target.value);
+  }
+
+  let filteredProducts;
+
+  if (selectedCategory === "All") {
+    filteredProducts = products;
+  } else {
+    filteredProducts = products.filter(function(product) {
+      return product.category === selectedCategory;
+    });
+  }
+
+  return (
+    <div>
+
+      <h1>Product Dashboard</h1>
+
+      <select
+        value={selectedCategory}
+        onChange={handleCategoryChange}
+      >
+        <option value="All">All</option>
+        <option value="Premium">Premium</option>
+        <option value="Deluxe">Deluxe</option>
+        <option value="Basic">Basic</option>
+      </select>
+
+      <br />
+      <br />
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "20px"
+        }}
+      >
+
+        {filteredProducts.map(function(product) {
+
+          return (
+            <div
+              key={product.id}
+              style={{
+                border: "1px solid gray",
+                padding: "20px",
+                borderRadius: "10px"
+              }}
+            >
+              <h2>{product.name}</h2>
+              <h3>₹{product.price}</h3>
+              <button>
+                {product.category}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+export default ProductTiles;
